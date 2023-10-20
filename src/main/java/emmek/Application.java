@@ -1,8 +1,11 @@
 package emmek;
 
-import emmek.Library.*;
+import emmek.entities.*;
+import emmek.utils.JpaUtil;
 import net.datafaker.Faker;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,16 +13,19 @@ import java.util.Scanner;
 import static java.lang.Math.abs;
 
 public class Application {
-    public static Library library = new Library();
+
+    private static final EntityManagerFactory emf = JpaUtil.getEntityManagerFactory();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        fakerize();
-        menu();
-        scanner.close();
+
+        EntityManager em = emf.createEntityManager();
+        System.out.println("hello world");
+
     }
 
     public static void menu() {
+        Library library = new Library();
         String query;
         List<LibraryItem> result;
         int choice = -1;
@@ -108,6 +114,7 @@ public class Application {
     }
 
     private static void remItem() {
+        Library library = new Library();
         int choice = -1;
         String isbn;
         while (choice != 0) {
@@ -155,6 +162,7 @@ public class Application {
     }
 
     private static void addItem() {
+        Library library = new Library();
         String isbn;
         String title;
         String year;
@@ -240,6 +248,7 @@ public class Application {
     }
 
     public static void fakerize() {
+        Library library = new Library();
         Faker faker = new Faker();
         Random rnd = new Random();
 

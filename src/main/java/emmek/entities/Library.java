@@ -1,4 +1,4 @@
-package emmek.Library;
+package emmek.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

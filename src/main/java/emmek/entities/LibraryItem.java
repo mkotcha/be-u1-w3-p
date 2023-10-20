@@ -1,13 +1,26 @@
-package emmek.Library;
+package emmek.entities;
 
-public class LibraryItem {
-    private final String isbn;
+import javax.persistence.*;
 
-    private final String title;
+@Entity
+@Table(name = "library_items")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class LibraryItem {
 
-    private final String year;
-    private final int pages;
+    @Id
+    private String isbn;
 
+    @OneToOne(mappedBy = "item")
+    private Borrow borrow;
+
+    private String title;
+
+    private String year;
+    private int pages;
+
+    public LibraryItem() {
+
+    }
 
     public LibraryItem(String isbn, String title, String year, int pages) {
         this.isbn = isbn;
@@ -15,6 +28,7 @@ public class LibraryItem {
         this.year = year;
         this.pages = pages;
     }
+
 
     @Override
     public String toString() {

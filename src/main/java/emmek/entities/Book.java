@@ -1,13 +1,23 @@
-package emmek.Library;
+package emmek.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "books")
 public class Book extends LibraryItem {
-    private final String author;
-    private final String genre;
+    private String author;
+    private String genre;
+
+    public Book() {
+        super();
+    }
 
     public Book(String isbn, String title, String year, int pages, String author, String genre) {
         super(isbn, title, year, pages);
         this.author = author;
         this.genre = genre;
+
     }
 
     @Override

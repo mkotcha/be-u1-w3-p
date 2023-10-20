@@ -1,4 +1,4 @@
-package emmek.Library;
+package emmek.entities;
 
 public enum Periodicity {
     WEEK,
