@@ -13,26 +13,29 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Math.abs;
 
 public class Application {
 
     private static final EntityManagerFactory emf = JpaUtil.getEntityManagerFactory();
+    private static final EntityManager em = emf.createEntityManager();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
         EntityManager em = emf.createEntityManager();
         fakerize();
-        System.out.println("hello world");
+        menu();
 
     }
 
     public static void menu() {
-        Library library = new Library();
+        LibraryItemDao library = new LibraryItemDao(em);
+
         String query;
-        List<LibraryItem> result;
+        List<LibraryItem> result = null;
         int choice = -1;
         while (choice != 0) {
             System.out.println();
@@ -46,8 +49,8 @@ public class Application {
             System.out.println("4 - find item by year");
             System.out.println("5 - find item by author");
             System.out.println("6 - save on disk");
-            System.out.println("7 - load from disk");
-            System.out.println("8 - print all library catalogue");
+            System.out.println("7 - ");
+            System.out.println("8 - ");
             System.out.println("0 - exit");
             System.out.println();
 
@@ -67,7 +70,7 @@ public class Application {
                 case 3:
                     System.out.println("search by ISBN");
                     query = scanner.nextLine();
-                    result = library.findIsbn(query);
+                    result = library.findByPartialIsbn(query);
                     System.out.println("result:");
                     result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
@@ -76,8 +79,14 @@ public class Application {
                     break;
                 case 4:
                     System.out.println("search by year");
-                    query = scanner.nextLine();
-                    result = library.findYear(query);
+                    try {
+                        int year = abs(Integer.parseInt(scanner.nextLine()));
+                        result = library.findByYear(year);
+                        result = library.findByYear(year);
+                    } catch (NumberFormatException ex) {
+                        System.err.println("not a number");
+                    }
+
                     System.out.println("result:");
                     result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
@@ -87,7 +96,7 @@ public class Application {
                 case 5:
                     System.out.println("search by author");
                     query = scanner.nextLine().toLowerCase();
-                    result = library.findAuthor(query);
+                    result = library.findByAuthor(query);
                     System.out.println("result:");
                     result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
@@ -95,13 +104,12 @@ public class Application {
                     scanner.nextLine();
                     break;
                 case 6:
-                    library.save();
+                    System.out.println("press enter to continue");
+                    scanner.nextLine();
                     break;
                 case 7:
-                    library.load();
-                    System.out.println(library.toString());
-                    System.out.println();
-                    System.out.println("press enter to continue");
+
+                    System.out.println("press enter to continuee");
                     scanner.nextLine();
                     break;
                 case 8:
@@ -119,7 +127,7 @@ public class Application {
     }
 
     private static void remItem() {
-        Library library = new Library();
+        LibraryItemDao library = new LibraryItemDao(em);
         int choice = -1;
         String isbn;
         while (choice != 0) {
@@ -140,8 +148,16 @@ public class Application {
                 System.out.println();
                 System.out.println("enter an ISBN (10 number)");
                 try {
-                    isbn = scanner.nextLine();
-                    library.rem(isbn);
+                    List<LibraryItem> libraryList = library.getAll();
+                    AtomicInteger i = new AtomicInteger(1);
+                    int index;
+                    libraryList.forEach(item -> System.out.println(i.getAndIncrement() + item.toString()));
+                    try {
+                        index = abs(Integer.parseInt(scanner.nextLine()));
+                        library.delete(libraryList.get(index));
+                    } catch (NumberFormatException ex) {
+                        System.err.println("not a number");
+                    }
                     System.out.println(library.toString());
                 } catch (Exception ex) {
                     System.err.println("wrong search filter");
@@ -152,11 +168,11 @@ public class Application {
                 choice = -1;
                 while (choice != 0) {
                     System.out.println();
-                    System.out.println("chose an item to remove from catalogue - 0 to exit");
-                    library.printIndex();
+                    System.out.println("chose an item to remove from catalogue - 0 to exit TODO");
+//                    library.printIndex();
                     try {
                         choice = abs(Integer.parseInt(scanner.nextLine()));
-                        if (choice > 0) library.rem(choice - 1);
+//                        if (choice > 0) library.rem(choice - 1);
                     } catch (NumberFormatException ex) {
                         System.err.println("not a number");
                     }
@@ -167,7 +183,8 @@ public class Application {
     }
 
     private static void addItem() {
-        Library library = new Library();
+
+        LibraryItemDao library = new LibraryItemDao(em);
         String isbn;
         String title;
         String year;
@@ -203,7 +220,7 @@ public class Application {
                     String author = scanner.nextLine();
                     System.out.println("genre");
                     String genre = scanner.nextLine();
-                    library.add(new Book(isbn, title, year, pages, author, genre));
+                    library.save(new Book(isbn, title, year, pages, author, genre));
                     System.out.println(library.toString());
                     System.out.println();
                     System.out.println("press enter to continue");
@@ -238,7 +255,7 @@ public class Application {
                         periodicity = periodicityArr[periodicityChoice - 1];
                         periodicityChoice = 0;
                     }
-                    library.add(new Magazine(isbn, title, year, pages, periodicity));
+                    library.save(new Magazine(isbn, title, year, pages, periodicity));
                     System.out.println(library.toString());
                     System.out.println();
                     System.out.println("press enter to continue");
@@ -253,7 +270,7 @@ public class Application {
     }
 
     public static void fakerize() {
-        EntityManager em = emf.createEntityManager();
+
         LibraryItemDao library = new LibraryItemDao(em);
         UserDao userDao = new UserDao(em);
         BorrowDao borrowDao = new BorrowDao(em);
@@ -283,7 +300,8 @@ public class Application {
             }
             user = new User(faker.name().firstName(), faker.name().lastName(), faker.date().birthday().toLocalDateTime().toLocalDate());
             userDao.save(user);
-            borrow = new Borrow(library.getRandomItem(), userDao.getRandomUser(), LocalDate.now());
+            LocalDate randomDay = LocalDate.now().minusDays(faker.number().numberBetween(1, 60));
+            borrow = new Borrow(library.getRandomItem(), userDao.getRandomUser(), randomDay);
             try {
                 borrowDao.save(borrow);
             } catch (Exception ex) {

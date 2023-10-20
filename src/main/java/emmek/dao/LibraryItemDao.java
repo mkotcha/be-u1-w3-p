@@ -1,6 +1,5 @@
 package emmek.dao;
 
-import emmek.entities.Book;
 import emmek.entities.LibraryItem;
 
 import javax.persistence.EntityManager;
@@ -68,8 +67,8 @@ public class LibraryItemDao {
         return query.getResultList();
     }
 
-    public List<Book> findByAuthor(String author) {
-        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE LOWER(b.author) LIKE LOWER(CONCAT('%', :author,'%'))", Book.class);
+    public List<LibraryItem> findByAuthor(String author) {
+        TypedQuery<LibraryItem> query = em.createQuery("SELECT b FROM Book b WHERE LOWER(b.author) LIKE LOWER(CONCAT('%', :author,'%'))", LibraryItem.class);
         query.setParameter("author", author);
         return query.getResultList();
     }
@@ -80,4 +79,8 @@ public class LibraryItemDao {
         return query.getResultList();
     }
 
+    public List<LibraryItem> getAll() {
+        TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i", LibraryItem.class);
+        return query.getResultList();
+    }
 }
