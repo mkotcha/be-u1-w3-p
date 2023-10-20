@@ -71,7 +71,7 @@ public class LibraryItemDao {
     }
 
     public List<LibraryItem> findByYear(int year) {
-        TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i WHERE i.year = :year", LibraryItem.class);
+        TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i WHERE i.year LIKE CONCAT('%',:year,'%') ", LibraryItem.class);
         query.setParameter("year", year);
         return query.getResultList();
     }

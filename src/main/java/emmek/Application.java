@@ -33,7 +33,6 @@ public class Application {
 
     public static void menu() {
         LibraryItemDao library = new LibraryItemDao(em);
-
         String query;
         List<LibraryItem> result = null;
         int choice = -1;
@@ -82,13 +81,12 @@ public class Application {
                     try {
                         int year = abs(Integer.parseInt(scanner.nextLine()));
                         result = library.findByYear(year);
-                        result = library.findByYear(year);
+                        System.out.println("result:");
+                        result.forEach(item -> System.out.print(item.toString()));
+
                     } catch (NumberFormatException ex) {
                         System.err.println("not a number");
                     }
-
-                    System.out.println("result:");
-                    result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
                     System.out.println("press enter to continue");
                     scanner.nextLine();
