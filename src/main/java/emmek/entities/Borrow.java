@@ -78,4 +78,14 @@ public class Borrow {
         return Objects.requireNonNullElseGet(dateTo, LocalDate::now).isAfter(limit);
 
     }
+
+    @Override
+    public String toString() {
+        return "Borrow " +
+                "id=" + id +
+                "\n item=" + item +
+                " user=" + user +
+                "\n dateFrom=" + dateFrom +
+                ", dateTo=" + dateTo + " ";
+    }
 }

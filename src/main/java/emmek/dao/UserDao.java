@@ -22,7 +22,7 @@ public class UserDao {
         System.out.println("User " + user.getName() + " saved");
     }
 
-    public User getById(long id) {
+    public User getById(int id) {
         return em.find(User.class, id);
     }
 

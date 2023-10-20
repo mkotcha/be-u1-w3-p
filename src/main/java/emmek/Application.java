@@ -32,9 +32,11 @@ public class Application {
     }
 
     public static void menu() {
-        LibraryItemDao library = new LibraryItemDao(em);
+        LibraryItemDao libraryDao = new LibraryItemDao(em);
+        UserDao userDao = new UserDao(em);
         String query;
         List<LibraryItem> result = null;
+        List<User> userList;
         int choice = -1;
         while (choice != 0) {
             System.out.println();
@@ -47,7 +49,7 @@ public class Application {
             System.out.println("3 - find item by isbn");
             System.out.println("4 - find item by year");
             System.out.println("5 - find item by author");
-            System.out.println("6 - save on disk");
+            System.out.println("6 - find item borrowed by user");
             System.out.println("7 - ");
             System.out.println("8 - ");
             System.out.println("0 - exit");
@@ -69,7 +71,7 @@ public class Application {
                 case 3:
                     System.out.println("search by ISBN");
                     query = scanner.nextLine();
-                    result = library.findByPartialIsbn(query);
+                    result = libraryDao.findByPartialIsbn(query);
                     System.out.println("result:");
                     result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
@@ -80,7 +82,7 @@ public class Application {
                     System.out.println("search by year");
                     try {
                         int year = abs(Integer.parseInt(scanner.nextLine()));
-                        result = library.findByYear(year);
+                        result = libraryDao.findByYear(year);
                         System.out.println("result:");
                         result.forEach(item -> System.out.print(item.toString()));
 
@@ -94,7 +96,7 @@ public class Application {
                 case 5:
                     System.out.println("search by author");
                     query = scanner.nextLine().toLowerCase();
-                    result = library.findByAuthor(query);
+                    result = libraryDao.findByAuthor(query);
                     System.out.println("result:");
                     result.forEach(item -> System.out.print(item.toString()));
                     System.out.println();
@@ -102,6 +104,20 @@ public class Application {
                     scanner.nextLine();
                     break;
                 case 6:
+                    System.out.println("find item borrowed by user");
+                    System.out.println("enter your card number");
+                    try {
+                        int card = abs(Integer.parseInt(scanner.nextLine()));
+                        User user = userDao.getById(card);
+                        System.out.println("result:");
+//                        System.out.println(user.toString());
+                        List<Borrow> borrowList = user.getBorrows();
+                        borrowList.forEach(borrow -> System.out.println(borrow.toString()));
+                    } catch (NumberFormatException ex) {
+                        System.err.println("not a number");
+                    }
+
+
                     System.out.println("press enter to continue");
                     scanner.nextLine();
                     break;
@@ -112,7 +128,7 @@ public class Application {
                     break;
                 case 8:
                     System.out.println();
-                    System.out.println(library.toString());
+                    System.out.println(libraryDao.toString());
                     System.out.println();
                     System.out.println("press enter to continue");
                     scanner.nextLine();

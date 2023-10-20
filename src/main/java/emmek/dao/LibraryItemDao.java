@@ -95,11 +95,8 @@ public class LibraryItemDao {
 
     @Override
     public String toString() {
-
         return getAll().stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(""));
-
-
     }
 }
