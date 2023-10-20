@@ -1,6 +1,7 @@
 package emmek.dao;
 
 import emmek.entities.Borrow;
+import emmek.entities.LibraryItem;
 import emmek.entities.User;
 
 import javax.persistence.EntityManager;
@@ -17,11 +18,15 @@ public class BorrowDao {
     }
 
     public void save(Borrow borrow) {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(borrow);
-        tx.commit();
-        System.out.println("Borrow " + borrow.getId() + " saved");
+        if (isItemAvaiable(borrow.getItem())) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            em.persist(borrow);
+            tx.commit();
+            System.out.println("Borrow " + borrow.getId() + " saved");
+        } else {
+            System.out.println("Item is not avaiable");
+        }
     }
 
     public Borrow getById(long id) {
@@ -63,5 +68,11 @@ public class BorrowDao {
     public List<Borrow> showUnreturnedItems() {
         TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.dateTo = null", Borrow.class);
         return query.getResultList();
+    }
+
+    public boolean isItemAvaiable(LibraryItem item) {
+        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.item = :item AND b.dateTo = null", Borrow.class);
+        query.setParameter("item", item);
+        return query.getResultList().isEmpty();
     }
 }

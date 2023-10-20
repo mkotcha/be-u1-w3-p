@@ -26,7 +26,7 @@ public class Application {
     public static void main(String[] args) {
 
         EntityManager em = emf.createEntityManager();
-//        fakerize();
+        fakerize();
         menu();
 
     }
