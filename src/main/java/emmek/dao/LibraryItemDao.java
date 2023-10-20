@@ -56,10 +56,10 @@ public class LibraryItemDao {
         System.out.println("Item with isbn " + isbn + " deleted");
     }
 
-    public LibraryItem findbyIsbn(String isbn) {
-        TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i WHERE i.isbn = :isbn", LibraryItem.class);
+    public List<LibraryItem> findByPartialIsbn(String isbn) {
+        TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i WHERE i.isbn LIKE CONCAT('%', :isbn,'%')", LibraryItem.class);
         query.setParameter("isbn", isbn);
-        return query.getSingleResult();
+        return query.getResultList();
     }
 
     public List<LibraryItem> findByYear(int year) {

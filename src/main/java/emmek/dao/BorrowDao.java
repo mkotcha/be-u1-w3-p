@@ -1,9 +1,12 @@
 package emmek.dao;
 
 import emmek.entities.Borrow;
+import emmek.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class BorrowDao {
 
@@ -41,4 +44,14 @@ public class BorrowDao {
         System.out.println("Borrow refreshed");
     }
 
+    public List<Borrow> findUserBorrow(User user) {
+        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.user = :user", Borrow.class);
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
+
+    public List<Borrow> findExpiredBorrow() {
+        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.isExpired = true", Borrow.class);
+        return query.getResultList();
+    }
 }

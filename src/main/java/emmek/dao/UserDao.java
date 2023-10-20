@@ -4,6 +4,7 @@ import emmek.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 
 public class UserDao {
 
@@ -42,7 +43,9 @@ public class UserDao {
     }
 
     public User getRandomUser() {
-        return em.createQuery("SELECT u FROM User u ORDER BY RAND()", User.class).setMaxResults(1).getSingleResult();
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u ORDER BY RAND()", User.class);
+        query.setMaxResults(1);
+        return query.getSingleResult();
     }
 
 }

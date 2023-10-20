@@ -3,6 +3,7 @@ package emmek.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "borrows")
@@ -69,5 +70,12 @@ public class Borrow {
 
     public void setDateTo(LocalDate dateTo) {
         this.dateTo = dateTo;
+    }
+
+    public boolean isExpired() {
+        LocalDate limit = dateFrom.plusDays(30);
+
+        return Objects.requireNonNullElseGet(dateTo, LocalDate::now).isAfter(limit);
+
     }
 }
