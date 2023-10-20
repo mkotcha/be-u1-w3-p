@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LibraryItemDao {
 
@@ -82,5 +83,15 @@ public class LibraryItemDao {
     public List<LibraryItem> getAll() {
         TypedQuery<LibraryItem> query = em.createQuery("SELECT i FROM LibraryItem i", LibraryItem.class);
         return query.getResultList();
+    }
+
+    @Override
+    public String toString() {
+
+        return getAll().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(""));
+
+
     }
 }
