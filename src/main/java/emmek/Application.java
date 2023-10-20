@@ -26,7 +26,7 @@ public class Application {
     public static void main(String[] args) {
 
         EntityManager em = emf.createEntityManager();
-        fakerize();
+//        fakerize();
         menu();
 
     }
@@ -147,32 +147,37 @@ public class Application {
                 System.out.println(library.toString());
                 System.out.println();
                 System.out.println("enter an ISBN (10 number)");
+                System.out.println(library.toString());
                 try {
-                    List<LibraryItem> libraryList = library.getAll();
-                    AtomicInteger i = new AtomicInteger(1);
-                    int index;
-                    libraryList.forEach(item -> System.out.println(i.getAndIncrement() + item.toString()));
-                    try {
-                        index = abs(Integer.parseInt(scanner.nextLine()));
-                        library.delete(libraryList.get(index));
-                    } catch (NumberFormatException ex) {
-                        System.err.println("not a number");
-                    }
-                    System.out.println(library.toString());
-                } catch (Exception ex) {
-                    System.err.println("wrong search filter");
+                    isbn = scanner.nextLine();
+                    library.deleteIsbn(isbn);
+                } catch (NumberFormatException ex) {
+                    System.err.println("wrong search filter no deleted item");
                 }
+                System.out.println(library.toString());
 
             }
             if (choice == 2) {
                 choice = -1;
-                while (choice != 0) {
+                int index = -1;
+                while (index != 0) {
                     System.out.println();
                     System.out.println("chose an item to remove from catalogue - 0 to exit TODO");
 //                    library.printIndex();
                     try {
-                        choice = abs(Integer.parseInt(scanner.nextLine()));
-//                        if (choice > 0) library.rem(choice - 1);
+                        List<LibraryItem> libraryList = library.getAll();
+                        AtomicInteger i = new AtomicInteger(1);
+
+                        libraryList.forEach(item -> System.out.println(i.getAndIncrement() + item.toString()));
+                        try {
+                            index = abs(Integer.parseInt(scanner.nextLine()));
+                            library.delete(libraryList.get(index - 1));
+                        } catch (NumberFormatException ex) {
+                            System.err.println("not a number");
+                        } catch (IndexOutOfBoundsException ex) {
+                            if (index != 0) System.err.println("wrong index");
+                        }
+                        System.out.println(library.toString());
                     } catch (NumberFormatException ex) {
                         System.err.println("not a number");
                     }

@@ -24,16 +24,18 @@ public class LibraryItemDao {
         System.out.println("Item " + item.getTitle() + " saved");
     }
 
-    public LibraryItem getById(long id) {
+    public LibraryItem getById(String id) {
         return em.find(LibraryItem.class, id);
     }
 
     public void delete(LibraryItem item) {
+
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         em.remove(item);
         tx.commit();
         System.out.println("Item " + item.getTitle() + " deleted");
+
     }
 
     public void refresh(LibraryItem item) {
@@ -49,11 +51,17 @@ public class LibraryItemDao {
     }
 
     public void deleteIsbn(String isbn) {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.createQuery("DELETE FROM LibraryItem i WHERE i.isbn = :isbn").setParameter("isbn", isbn).executeUpdate();
-        tx.commit();
-        System.out.println("Item with isbn " + isbn + " deleted");
+        LibraryItem item = getById(isbn);
+        if (item != null) {
+            System.out.println(isbn);
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            em.remove(item);
+            tx.commit();
+            System.out.println("Item with isbn " + isbn + " deleted");
+        } else {
+            System.out.println("Item with isbn " + isbn + " not found");
+        }
     }
 
     public List<LibraryItem> findByPartialIsbn(String isbn) {
