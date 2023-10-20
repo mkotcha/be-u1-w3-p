@@ -67,7 +67,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "User {" +
                 "cardNumber=" + cardNumber +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +

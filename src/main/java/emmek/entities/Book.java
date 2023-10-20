@@ -22,7 +22,7 @@ public class Book extends LibraryItem {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "Book {" +
                 super.toString() +
                 ", author='" + author + '\'' +
                 ", genre='" + genre + '\'' +

@@ -34,9 +34,11 @@ public class Application {
     public static void menu() {
         LibraryItemDao libraryDao = new LibraryItemDao(em);
         UserDao userDao = new UserDao(em);
+        BorrowDao borrowDao = new BorrowDao(em);
         String query;
         List<LibraryItem> result = null;
         List<User> userList;
+        List<Borrow> borrowList;
         int choice = -1;
         while (choice != 0) {
             System.out.println();
@@ -50,8 +52,8 @@ public class Application {
             System.out.println("4 - find item by year");
             System.out.println("5 - find item by author");
             System.out.println("6 - find item borrowed by user");
-            System.out.println("7 - ");
-            System.out.println("8 - ");
+            System.out.println("7 - show expired borrows");
+            System.out.println("8 - show unreturned items");
             System.out.println("0 - exit");
             System.out.println();
 
@@ -110,26 +112,30 @@ public class Application {
                         int card = abs(Integer.parseInt(scanner.nextLine()));
                         User user = userDao.getById(card);
                         System.out.println("result:");
-//                        System.out.println(user.toString());
-                        List<Borrow> borrowList = user.getBorrows();
-                        borrowList.forEach(borrow -> System.out.println(borrow.toString()));
+                        borrowList = user.getBorrows();
+                        System.out.println("\n" + borrowList.size() + " items for " + user.toString() + "\n");
+                        borrowList.forEach(borrow -> {
+                            System.out.println(borrow.toString());
+                            System.out.println("Expired: " + borrow.isExpired());
+                        });
                     } catch (NumberFormatException ex) {
                         System.err.println("not a number");
                     }
-
 
                     System.out.println("press enter to continue");
                     scanner.nextLine();
                     break;
                 case 7:
-
+                    borrowList = borrowDao.findExpiredBorrow();
+                    System.out.println(borrowList.size() + " items expired\n");
+                    borrowList.forEach(borrow -> System.out.println(borrow.toString()));
                     System.out.println("press enter to continuee");
                     scanner.nextLine();
                     break;
                 case 8:
-                    System.out.println();
-                    System.out.println(libraryDao.toString());
-                    System.out.println();
+                    borrowList = borrowDao.showUnreturnedItems();
+                    System.out.println(borrowList.size() + " items not returned\n");
+                    borrowList.forEach(borrow -> System.out.println(borrow.toString()));
                     System.out.println("press enter to continue");
                     scanner.nextLine();
                     break;

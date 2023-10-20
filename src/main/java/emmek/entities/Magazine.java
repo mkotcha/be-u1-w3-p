@@ -21,7 +21,7 @@ public class Magazine extends LibraryItem {
 
     @Override
     public String toString() {
-        return "Magazine{" +
+        return "Magazine {" +
                 super.toString() +
                 ", periodicity=" + periodicity +
                 "}\n";

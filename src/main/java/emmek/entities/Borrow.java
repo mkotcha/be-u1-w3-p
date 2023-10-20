@@ -82,10 +82,10 @@ public class Borrow {
     @Override
     public String toString() {
         return "Borrow " +
-                "id=" + id +
-                "\n item=" + item +
-                " user=" + user +
-                "\n dateFrom=" + dateFrom +
-                ", dateTo=" + dateTo + " ";
+                "id = " + id +
+                "\n item = " + item +
+                " user = " + user +
+                "\n date from = " + dateFrom +
+                ", date to = " + dateTo + " ";
     }
 }

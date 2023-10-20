@@ -51,7 +51,17 @@ public class BorrowDao {
     }
 
     public List<Borrow> findExpiredBorrow() {
-        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.isExpired = true", Borrow.class);
+        List<Borrow> borrows = findAll();
+        return borrows.stream().filter(Borrow::isExpired).toList();
+    }
+
+    private List<Borrow> findAll() {
+        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b", Borrow.class);
+        return query.getResultList();
+    }
+
+    public List<Borrow> showUnreturnedItems() {
+        TypedQuery<Borrow> query = em.createQuery("SELECT b FROM Borrow b WHERE b.dateTo = null", Borrow.class);
         return query.getResultList();
     }
 }
