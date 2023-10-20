@@ -10,7 +10,7 @@ public abstract class LibraryItem {
     @Id
     private String isbn;
 
-    @OneToOne(mappedBy = "item")
+    @OneToOne(mappedBy = "item", cascade = CascadeType.REMOVE)
     private Borrow borrow;
 
     private String title;
@@ -29,6 +29,9 @@ public abstract class LibraryItem {
         this.pages = pages;
     }
 
+    public Borrow getBorrow() {
+        return borrow;
+    }
 
     @Override
     public String toString() {

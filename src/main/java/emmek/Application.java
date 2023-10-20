@@ -1,11 +1,15 @@
 package emmek;
 
+import emmek.dao.BorrowDao;
+import emmek.dao.LibraryItemDao;
+import emmek.dao.UserDao;
 import emmek.entities.*;
 import emmek.utils.JpaUtil;
 import net.datafaker.Faker;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -20,6 +24,7 @@ public class Application {
     public static void main(String[] args) {
 
         EntityManager em = emf.createEntityManager();
+        fakerize();
         System.out.println("hello world");
 
     }
@@ -248,27 +253,41 @@ public class Application {
     }
 
     public static void fakerize() {
-        Library library = new Library();
+        EntityManager em = emf.createEntityManager();
+        LibraryItemDao library = new LibraryItemDao(em);
+        UserDao userDao = new UserDao(em);
+        BorrowDao borrowDao = new BorrowDao(em);
         Faker faker = new Faker();
         Random rnd = new Random();
-
+        Book book;
+        Magazine magazine;
+        Borrow borrow;
+        User user;
         for (int i = 0; i < 4; i++) {
             Periodicity[] periodicity = Periodicity.values();
             if (rnd.nextBoolean()) {
-                library.add(new Book(faker.code().isbn10(),
+                book = new Book(faker.code().isbn10(),
                         faker.book().title(),
                         faker.date().birthday("yyyy"),
                         faker.number().numberBetween(35, 1000),
                         faker.book().author(),
-                        faker.book().genre()
-                ));
+                        faker.book().genre());
+                library.save(book);
             } else {
-                library.add(new Magazine(faker.code().isbn10(),
+                magazine = new Magazine(faker.code().isbn10(),
                         faker.yoda().quote(),
                         faker.date().birthday("yyyy"),
                         faker.number().numberBetween(16, 100),
-                        periodicity[rnd.nextInt(periodicity.length)]
-                ));
+                        periodicity[rnd.nextInt(periodicity.length)]);
+                library.save(magazine);
+            }
+            user = new User(faker.name().firstName(), faker.name().lastName(), faker.date().birthday().toLocalDateTime().toLocalDate());
+            userDao.save(user);
+            borrow = new Borrow(library.getRandomItem(), userDao.getRandomUser(), LocalDate.now());
+            try {
+                borrowDao.save(borrow);
+            } catch (Exception ex) {
+                System.err.println("item already borrowed " + ex.getMessage());
             }
         }
     }

@@ -8,9 +8,10 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<Borrow> borrows;
     @Id
+    @GeneratedValue
     @Column(name = "card_number")
     private int cardNumber;
     private String name;
@@ -22,8 +23,7 @@ public class User {
     public User() {
     }
 
-    public User(int cardNumber, String name, String surname, LocalDate birthDate) {
-        this.cardNumber = cardNumber;
+    public User(String name, String surname, LocalDate birthDate) {
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
