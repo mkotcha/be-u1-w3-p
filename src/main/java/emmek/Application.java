@@ -182,13 +182,11 @@ public class Application {
                 int index = -1;
                 while (index != 0) {
                     System.out.println();
-                    System.out.println("chose an item to remove from catalogue - 0 to exit TODO");
-//                    library.printIndex();
+                    System.out.println("chose an item to remove from catalogue - 0 to exit\n");
                     try {
                         List<LibraryItem> libraryList = library.getAll();
                         AtomicInteger i = new AtomicInteger(1);
-
-                        libraryList.forEach(item -> System.out.println(i.getAndIncrement() + item.toString()));
+                        libraryList.forEach(item -> System.out.println(i.getAndIncrement() + " " + item.toString()));
                         try {
                             index = abs(Integer.parseInt(scanner.nextLine()));
                             library.delete(libraryList.get(index - 1));
