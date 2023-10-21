@@ -1,6 +1,7 @@
 package emmek.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "library_items")
@@ -10,8 +11,8 @@ public abstract class LibraryItem {
     @Id
     private String isbn;
 
-    @OneToOne(mappedBy = "item", cascade = CascadeType.REMOVE)
-    private Borrow borrow;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private List<Borrow> borrows;
 
     private String title;
 
@@ -29,8 +30,8 @@ public abstract class LibraryItem {
         this.pages = pages;
     }
 
-    public Borrow getBorrow() {
-        return borrow;
+    public List<Borrow> getBorrows() {
+        return borrows;
     }
 
     @Override

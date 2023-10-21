@@ -13,7 +13,7 @@ public class Borrow {
     @GeneratedValue
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "item_id")
     private LibraryItem item;
 
