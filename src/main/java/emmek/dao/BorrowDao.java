@@ -25,7 +25,7 @@ public class BorrowDao {
             tx.commit();
             System.out.println("Borrow " + borrow.getItem().getTitle() + " saved");
         } else {
-            System.out.println("Item " + borrow.getItem().getTitle() + " is not avaiable");
+            System.out.println("Item " + borrow.getItem().getTitle() + " is not available");
         }
     }
 
