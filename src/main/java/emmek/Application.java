@@ -325,11 +325,7 @@ public class Application {
             userDao.save(user);
             LocalDate randomDay = LocalDate.now().minusDays(faker.number().numberBetween(1, 60));
             borrow = new Borrow(library.getRandomItem(), userDao.getRandomUser(), randomDay);
-            try {
-                borrowDao.save(borrow);
-            } catch (Exception ex) {
-                System.err.println("item already borrowed " + ex.getMessage());
-            }
+            borrowDao.save(borrow);
         }
     }
 }
