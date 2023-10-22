@@ -14,6 +14,7 @@ public abstract class LibraryItem {
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private List<Borrow> borrows;
 
+    @Column(columnDefinition = "TEXT")
     private String title;
 
     private String year;

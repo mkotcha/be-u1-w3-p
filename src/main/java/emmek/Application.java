@@ -303,7 +303,7 @@ public class Application {
         Magazine magazine;
         Borrow borrow;
         User user;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 40; i++) {
             Periodicity[] periodicity = Periodicity.values();
             if (rnd.nextBoolean()) {
                 book = new Book(faker.code().isbn10(),
